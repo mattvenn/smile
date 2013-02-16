@@ -19,7 +19,7 @@ def new_statement(statement_number):
     return not os.path.exists(get_statement_path(statement_number))
 
 def get_statement_path(statement_number):
-    return "/home/matthew/work/finances/accounts/account%d/statement%s.csv" % (args.account_num,statement_number)
+    return "%s/account%d/statement%s.csv" % (args.account_path, args.account_num,statement_number)
 
 def parse_table(body,statement_number):
     if re.compile("logged out").search(body):
@@ -53,6 +53,7 @@ if __name__ == '__main__':
     parser.add_argument('--store', action='store_const', dest='store', const='True', help="store all html files")
     parser.add_argument('--noverbose', action='store_const', const=False, dest='verbose', default=True, help="verbose")
     parser.add_argument('--spi-file', action='store', dest='spi_file', help="spi details", required = True)
+    parser.add_argument('--account-path', action='store', dest='account_path', help="where to store statements", default = "/home/matthew/work/finances/accounts/")
     parser.add_argument('--account-num', action='store', type=int, dest='account_num', default=0, help="which account num")
     
     args = parser.parse_args()
