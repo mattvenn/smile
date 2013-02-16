@@ -96,13 +96,13 @@ if __name__ == '__main__':
             if first:
                 br.form["firstPassCodeDigit"] = [spi["codes"][count]]
                 if args.verbose:
-                    print "using %s for first" % spi["codes"][count]
+                    print "asked for digit #%d" % count
                 second = True
                 first = False
             elif second:
                 br.form["secondPassCodeDigit"] = [spi["codes"][count]]
                 if args.verbose:
-                    print "using %s for second" % spi["codes"][count]
+                    print "asked for digit #%d" % count
         count += 1
             
     body = br.submit().read()
@@ -114,16 +114,26 @@ if __name__ == '__main__':
     br.select_form(name="loginSpiForm")
 
     if re.compile("memorable date:").search(body):
+        if args.verbose:
+            print "memorable date"
         br.form["memorableDay"] = spi["mem_day"]
         br.form["memorableMonth"] = spi["mem_month"]
         br.form["memorableYear"] = spi["mem_year"]
     elif re.compile("place of birth").search(body):
+        if args.verbose:
+            print "place of birth"
         br.form["birthPlace"] = spi["place_of_birth"]
     elif re.compile("lastschool").search(body):
+        if args.verbose:
+            print "last school"
         br.form["lastSchool"] = spi["last_school"]
     elif re.compile("firstschool").search(body):
+        if args.verbose:
+            print "first school"
         br.form["firstSchool"] = spi["first_school"]
     elif re.compile("memorable name:").search(body):
+        if args.verbose:
+            print "memorable name"
         br.form["memorableName"] = spi["memorable_name"]
     else:
         print "don't know this SPI"
@@ -142,7 +152,7 @@ if __name__ == '__main__':
         print "logged in"
 
     if args.verbose:
-        print "fetching details for account %d" % args.account_num
+        print "fetching details for account #%d" % args.account_num
 
     #main current account
     body = br.follow_link(text_regex=r"current account", nr=args.account_num).read()
