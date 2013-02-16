@@ -51,7 +51,7 @@ if __name__ == '__main__':
     group.add_argument('--recent', action='store_const', dest='recent', const=True, help="download most recent")
 
     parser.add_argument('--store', action='store_const', dest='store', const='True', help="store all html files")
-    parser.add_argument('--verbose', action='store_const', const=True, dest='verbose', default=True, help="verbose")
+    parser.add_argument('--noverbose', action='store_const', const=False, dest='verbose', default=True, help="verbose")
     parser.add_argument('--spi-file', action='store', dest='spi_file', help="spi details", required = True)
     parser.add_argument('--account-num', action='store', type=int, dest='account_num', default=0, help="which account num")
     
