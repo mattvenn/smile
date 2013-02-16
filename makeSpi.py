@@ -1,14 +1,14 @@
+#!/usr/bin/python
 import json
-data = {
-    "sort" : "1",
-    "account" : "1",
-    "codes" : [ "1","1","1","1"],
-    "mem_day" : "1",
-    "mem_month" : "1",
-    "mem_year" : "1",
-    "first_school" : "1",
-    "last_school" : "1",
-    "memorable_name" : "1",
-    "place_of_birth" : "1",
-    }
-print json.dumps(data)
+import sys
+
+spi_file = "spi.json"
+data = {}
+fields = [ "sort", "account" "codes" , "mem_day" , "mem_month" , "mem_year" , "first_school" , "last_school" , "memorable_name" , "place_of_birth" ]
+for field in fields:
+    print "%s:" % field
+    data[field] = sys.stdin.readline().strip()
+
+f = open(spi_file, 'w')
+json.dump(data,f)
+print "written spi data to %s, now do: chmod 400 %s" % (spi_file,spi_file)
