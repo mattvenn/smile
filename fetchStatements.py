@@ -142,13 +142,21 @@ if __name__ == '__main__':
         exit(1)
 
     body = br.submit().read()
-    store_body(body,"accounts.html")
+
+    #there may be a message we have to read
+    if re.compile("important information regarding internet banking").search(body):
+        if args.verbose:
+            print "message to read"
+        store_body(body,"message.html")
+        br.select_form(name="linearButtonNavigationForm")
+        body = br.submit().read()
 
     #now should be logged in
     if not re.compile("to view your account details click on an account").search(body):
         print "don't seem to be logged in"
         exit(1)
 
+    store_body(body,"accounts.html")
     if args.verbose:
         print "logged in"
 
