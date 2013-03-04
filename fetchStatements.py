@@ -19,7 +19,7 @@ def new_statement(statement_number):
     return not os.path.exists(get_statement_path(statement_number))
 
 def get_statement_path(statement_number):
-    return "%s/account%d/statement%s.csv" % (args.account_path, args.account_num,statement_number)
+    return "%s/%s/account%d/statement%s.csv" % (args.account_path, args.account_type, args.account_num,statement_number)
 
 def parse_table(body,statement_number):
     if re.compile("logged out").search(body):
@@ -30,18 +30,18 @@ def parse_table(body,statement_number):
         return
 
     #parse the table
-    p = TableParser()
+    p = TableParser(args.account_type)
     p.feed(body) 
     data = p.data
     if args.verbose:
         print "parsed %d lines of data" % len(data)
-
-    #write to csv file
-    with open(get_statement_path(statement_number), 'wb') as csvfile:
-        writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        for line in data:
-            writer.writerow(line)
-    csvfile.close()
+    if len(data):
+        #write to csv file
+        with open(get_statement_path(statement_number), 'wb') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            for line in data:
+                writer.writerow(line)
+        csvfile.close()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="login to smile and download statements")
@@ -54,6 +54,7 @@ if __name__ == '__main__':
     parser.add_argument('--noverbose', action='store_const', const=False, dest='verbose', default=True, help="verbose")
     parser.add_argument('--spi-file', action='store', dest='spi_file', help="spi details", required = True)
     parser.add_argument('--account-path', action='store', dest='account_path', help="where to store statements", default = "/home/matthew/work/finances/accounts/")
+    parser.add_argument('--account-type', action='store', dest='account_type', help="savings or current", default = "current")
     parser.add_argument('--account-num', action='store', type=int, dest='account_num', default=0, help="which account num")
     
     args = parser.parse_args()
@@ -164,7 +165,15 @@ if __name__ == '__main__':
         print "fetching details for account #%d" % args.account_num
 
     #main current account
-    body = br.follow_link(text_regex=r"current account", nr=args.account_num).read()
+    if args.account_type == 'current':
+        regex = r"current account"
+    elif args.account_type == 'savings':
+        regex = r"savings account"
+    else:
+        print "unknown account type ", args.account_type
+        exit(1)
+
+    body = br.follow_link(text_regex=regex, nr=args.account_num).read()
     store_body(body,"accountpage.html")
 
     #previous statements
