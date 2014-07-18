@@ -4,7 +4,7 @@ import sys
 
 spi_file = "spi.json"
 data = {}
-fields = [ "sort", "account" "codes" , "mem_day" , "mem_month" , "mem_year" , "first_school" , "last_school" , "memorable_name" , "place_of_birth" ]
+fields = [ "sort", "account", "codes" , "mem_day" , "mem_month" , "mem_year" , "first_school" , "last_school" , "memorable_name" , "place_of_birth" ]
 for field in fields:
     print "%s:" % field
     data[field] = sys.stdin.readline().strip()

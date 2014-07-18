@@ -53,7 +53,7 @@ if __name__ == '__main__':
     parser.add_argument('--store', action='store_const', dest='store', const='True', help="store all html files")
     parser.add_argument('--noverbose', action='store_const', const=False, dest='verbose', default=True, help="verbose")
     parser.add_argument('--spi-file', action='store', dest='spi_file', help="spi details", required = True)
-    parser.add_argument('--account-path', action='store', dest='account_path', help="where to store statements", default = "/home/matthew/work/finances/accounts/")
+    parser.add_argument('--account-path', action='store', dest='account_path', help="where to store statements", default = "/home/mattvenn/work/finances/accounts/")
     parser.add_argument('--account-type', action='store', dest='account_type', help="savings or current", default = "current")
     parser.add_argument('--account-num', action='store', type=int, dest='account_num', default=0, help="which account num")
     
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     body = br.submit().read()
 
     #there may be a message we have to read
-    if re.compile("important information regarding internet banking").search(body):
+    if re.compile("important",re.IGNORECASE).search(body):
         if args.verbose:
             print "message to read"
         store_body(body,"message.html")
