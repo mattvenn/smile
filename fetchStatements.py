@@ -145,7 +145,7 @@ if __name__ == '__main__':
     body = br.submit().read()
 
     #there may be a message we have to read
-    if re.compile("important",re.IGNORECASE).search(body):
+    if re.compile("important|making some changes",re.IGNORECASE).search(body):
         if args.verbose:
             print "message to read"
         store_body(body,"message.html")

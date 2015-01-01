@@ -11,7 +11,7 @@ chmod 400 spi.json
 
 then create directory structure for your statements
 
-mkdir -p accounts/account0 ; mkdir -p accounts/account1
+mkdir -p accounts/current/account0 ; mkdir -p accounts/savings/account0
 
 then use fetchStatements.py to pull your statements. 
 
