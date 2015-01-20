@@ -93,7 +93,7 @@ if __name__ == '__main__':
         exit(1)
 
     for number in ["first", "second", "third", "fourth" ]:
-        regex = re.compile("%s digit:" % number)
+        regex = re.compile("%s digit" % number)
         if regex.search(body):
             if first:
                 br.form["firstPassCodeDigit"] = [spi["codes"][count]]
@@ -112,10 +112,11 @@ if __name__ == '__main__':
 
     if args.verbose:
         print "spi"
+
     #this one is the memorable date, name etc
     br.select_form(name="loginSpiForm")
 
-    if re.compile("memorable date:").search(body):
+    if re.compile("memorable date").search(body):
         if args.verbose:
             print "memorable date"
         br.form["memorableDay"] = spi["mem_day"]
@@ -145,7 +146,7 @@ if __name__ == '__main__':
     body = br.submit().read()
 
     #there may be a message we have to read
-    if re.compile("important|making some changes",re.IGNORECASE).search(body):
+    if re.compile("important|making some changes|new online banking",re.IGNORECASE).search(body):
         if args.verbose:
             print "message to read"
         store_body(body,"message.html")
