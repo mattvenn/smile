@@ -3,7 +3,7 @@ import json
 import re
 import argparse
 import mechanize
-import pdb
+import ipdb
 import csv
 import os
 
@@ -134,27 +134,35 @@ if __name__ == '__main__':
         if args.verbose:
             print "first school"
         br.form["firstSchool"] = spi["first_school"]
-    elif re.compile("memorable name:").search(body):
+    elif re.compile("memorable name").search(body):
         if args.verbose:
             print "memorable name"
         br.form["memorableName"] = spi["memorable_name"]
     else:
         print "don't know this SPI"
-        pdb.set_trace()
+        ipdb.set_trace()
         exit(1)
 
     body = br.submit().read()
 
     #there may be a message we have to read
-    if re.compile("important|making some changes|new online banking",re.IGNORECASE).search(body):
+    for form in br.forms():
+        if form.name == 'linearButtonNavigationForm':
+            if args.verbose:
+                print "message to read"
+            br.select_form(name="linearButtonNavigationForm")
+            body = br.submit().read()
+    """
+    if re.compile("important|making some changes|new online banking|contact details",re.IGNORECASE).search(body):
         if args.verbose:
             print "message to read"
         store_body(body,"message.html")
         br.select_form(name="linearButtonNavigationForm")
         body = br.submit().read()
+    """
 
     #now should be logged in
-    if not re.compile("to view your account details click on an account").search(body):
+    if not re.compile("your account was last accessed").search(body):
         print "don't seem to be logged in"
         exit(1)
 
@@ -217,7 +225,7 @@ if __name__ == '__main__':
                 print "no new statements"
 
     #logout
-    finish = br.follow_link(text_regex=r"exit", nr=0).read()
+    finish = br.follow_link(text_regex=r"log off", nr=0).read()
     store_body(finish,"logout.html")
     if args.verbose:
         print "logged out"
